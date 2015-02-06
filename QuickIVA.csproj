@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{EFD77602-B0CA-4F9D-9856-051C9C8A9A85}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>QuickIVA</RootNamespace>
+    <AssemblyName>QuickIVA</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="BeforeExecute" command="" />
+        <Command type="AfterBuild" command="./install.sh" />
+      </CustomCommands>
+    </CustomCommands>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\lib\0.90\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>..\lib\0.90\UnityEngine.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QI.cs" />
+    <Compile Include="QI_Settings.cs" />
+    <Compile Include="QI_GUI.cs" />
+    <Compile Include="QI_Toolbar.cs" />
+    <Compile Include="ToolbarWrapper.cs" />
+    <Compile Include="QI_IVA.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <None Include="COPYING" />
+    <None Include="README.md" />
+    <None Include="QuickIVA.version" />
+    <None Include="GameData\QuickIVA\COPYING" />
+    <None Include="GameData\QuickIVA\QuickIVA.version" />
+    <None Include="GameData\QuickIVA\README.md" />
+    <None Include="GameData\QuickIVA\Plugins\QuickIVA.dll" />
+    <None Include="GameData\QuickIVA\Config.txt" />
+    <None Include="BlizzyToolBar.xcf" />
+    <None Include="StockToolBar.xcf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="GameData\" />
+  </ItemGroup>
+</Project>

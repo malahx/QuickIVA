@@ -1,0 +1,11 @@
+﻿Enabled = true
+IVAatLaunch = false
+AutoHideUI = true
+DisableThirdPersonVessel = true
+DisableMapView = false
+DisableShowUIonIVA = true
+StockToolBar = true
+BlizzyToolBar = true
+KeyEnabled = true
+KeyRecovery = end
+KeyEVA = backspace

@@ -8,4 +8,4 @@ StockToolBar = true
 BlizzyToolBar = true
 KeyEnabled = true
 KeyRecovery = end
-KeyEVA = backspace
+KeyEVA = home

@@ -33,7 +33,7 @@ The HUD can be automaticaly hide and the others camera / MapView can be disabled
 
 Keyboard shortcuts:
 - "end" to recovery,
-- "backspace" to EVA.
+- "home" to EVA.
 
 #### How to install it?
 
@@ -44,6 +44,9 @@ Unzip all files. Put the QuickIVA folder in your KSP/GameData folder.
 Delete the QuickIVA folder in your KSP/GameData folder.
 
 #### Changelog
+
+v1.01 - 2015.02.13
+- Fix: Change the default EVA shortcut to "Home", (backspace is the default shortcut for abort).
 
 v1.00 - 2015.02.07
 - Initial release

@@ -52,7 +52,7 @@ namespace QuickIVA {
 		[Persistent]
 		public string KeyRecovery = "end";
 		[Persistent]
-		public string KeyEVA = "backspace";
+		public string KeyEVA = "home";
 
 		public void Save() {
 			ConfigNode _temp = ConfigNode.CreateConfigFromObject(this, new ConfigNode());

@@ -24,7 +24,7 @@ namespace QuickIVA {
 
 	public class Quick : MonoBehaviour {
 
-		public readonly static string VERSION = "1.00";
+		public readonly static string VERSION = "1.01";
 		public readonly static string MOD = "QuickIVA";
 		private static bool isdebug = true;
 

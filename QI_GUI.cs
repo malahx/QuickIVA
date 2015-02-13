@@ -139,7 +139,7 @@ namespace QuickIVA {
 					Input.GetKey(QSettings.Instance.KeyEVA);
 				} catch {
 					Quick.Warning ("Wrong key: " + QSettings.Instance.KeyEVA);
-					QSettings.Instance.KeyEVA = "backspace";
+					QSettings.Instance.KeyEVA = "home";
 				}
 				Settings ();
 			}

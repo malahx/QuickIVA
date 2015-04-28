@@ -30,29 +30,54 @@ namespace QuickIVA {
 			RectSettings = new Rect ((Screen.width - 515)/2, (Screen.height - 400)/2, 515, 400);
 		}
 
-		private static void Lock(bool activate, ControlTypes Ctrl) {
+		private static void Lock(bool activate, ControlTypes Ctrl = ControlTypes.None) {
 			if (HighLogic.LoadedSceneIsFlight) {
 				FlightDriver.SetPause (activate);
+				if (activate) {
+					InputLockManager.SetControlLock (ControlTypes.CAMERACONTROLS | ControlTypes.MAP, "Lock" + Quick.MOD);
+					return;
+				}
+			} else if (HighLogic.LoadedSceneIsEditor) {
+				if (activate) {
+					EditorLogic.fetch.Lock(true, true, true, "EditorLock" + Quick.MOD);
+					return;
+				} else {
+					EditorLogic.fetch.Unlock ("EditorLock" + Quick.MOD);
+				}
 			}
 			if (activate) {
 				InputLockManager.SetControlLock (Ctrl, "Lock" + Quick.MOD);
+				return;
 			} else {
 				InputLockManager.RemoveControlLock ("Lock" + Quick.MOD);
 			}
-		}
-
-		internal static void Settings() {
-			WindowSettings = !WindowSettings;
-			Lock (WindowSettings, ControlTypes.KSC_ALL);
-			QToolbar.Reset ();
-			if (!WindowSettings) {
-				QSettings.Instance.Save ();
+			if (InputLockManager.GetControlLock ("Lock" + Quick.MOD) != ControlTypes.None) {
+				InputLockManager.RemoveControlLock ("Lock" + Quick.MOD);
+			}
+			if (InputLockManager.GetControlLock ("EditorLock" + Quick.MOD) != ControlTypes.None) {
+				InputLockManager.RemoveControlLock ("EditorLock" + Quick.MOD);
 			}
 		}
+
+		public static void Settings() {
+			SettingsSwitch ();
+			if (!WindowSettings) {
+				QSettings.Instance.Save ();
+				QStockToolbar.BlizzyToolbar.Reset ();
+				QStockToolbar.Instance.Reset ();
+			}
+		}
+
+		internal static void SettingsSwitch() {
+			WindowSettings = !WindowSettings;
+			QStockToolbar.Instance.Set (WindowSettings);
+			Lock (WindowSettings, ControlTypes.KSC_ALL | ControlTypes.TRACKINGSTATION_UI | ControlTypes.CAMERACONTROLS | ControlTypes.MAP);
+		}
+
 		internal static void OnGUI() {
 			if (WindowSettings) {
 				GUI.skin = HighLogic.Skin;
-				RectSettings = GUILayout.Window (QSettings.idGUI, RectSettings, DrawSettings, Quick.MOD + " " + Quick.VERSION, GUILayout.Width (RectSettings.width), GUILayout.ExpandHeight(true));
+				RectSettings = GUILayout.Window (1584653, RectSettings, DrawSettings, Quick.MOD + " " + Quick.VERSION, GUILayout.Width (RectSettings.width), GUILayout.ExpandHeight(true));
 			}
 		}
 
@@ -68,14 +93,11 @@ namespace QuickIVA {
 			QSettings.Instance.KeyEnabled = GUILayout.Toggle (QSettings.Instance.KeyEnabled, "Enable Keyboard shortcuts", GUILayout.Width (225));
 			GUILayout.EndHorizontal ();
 			GUILayout.Space (5);
-			if (QToolbar.isBlizzyToolBar) {
+			if (QBlizzyToolbar.isAvailable) {
 				_rect += 39;
 				GUILayout.BeginHorizontal ();
 				QSettings.Instance.StockToolBar = GUILayout.Toggle (QSettings.Instance.StockToolBar, "Use the Stock ToolBar", GUILayout.Width (275));
 				QSettings.Instance.BlizzyToolBar = GUILayout.Toggle (QSettings.Instance.BlizzyToolBar, "Use the Blizzy ToolBar", GUILayout.Width (225));
-				if (!QSettings.Instance.StockToolBar && !QSettings.Instance.BlizzyToolBar) {
-					QSettings.Instance.StockToolBar = true;
-				}
 				GUILayout.EndHorizontal ();
 				GUILayout.Space (5);
 			}

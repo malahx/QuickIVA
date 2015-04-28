@@ -22,24 +22,6 @@ using UnityEngine;
 
 namespace QuickIVA {
 
-	public class Quick : MonoBehaviour {
-
-		public readonly static string VERSION = "1.01";
-		public readonly static string MOD = "QuickIVA";
-		private static bool isdebug = true;
-
-		internal static void Log(string msg) {
-			if (isdebug) {
-				Debug.Log (MOD + "(" + VERSION + "): " + msg);
-			}
-		}
-		internal static void Warning(string msg) {
-			if (isdebug) {
-				Debug.LogWarning (MOD + "(" + VERSION + "): " + msg);
-			}
-		}
-	}
-
 	[KSPAddon(KSPAddon.Startup.Flight, false)]
 	public class QuickIVA : QIVA {
 

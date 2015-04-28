@@ -25,11 +25,8 @@ namespace QuickIVA {
 	public class QSettings : MonoBehaviour {
 
 		public readonly static QSettings Instance = new QSettings();
-		public readonly static int idGUI = 1584653;
-		//public readonly static ulong idCAMERAMODE = 1584653;
-		//public readonly static ulong idTOGGLEUI = 1584654;
 
-		internal string File_settings = KSPUtil.ApplicationRootPath + "GameData/" + Quick.MOD + "/Config.txt";
+		internal string FileConfig = KSPUtil.ApplicationRootPath + "GameData/" + Quick.MOD + "/Config.txt";
 
 		[Persistent]
 		public bool Enabled = true;
@@ -56,13 +53,20 @@ namespace QuickIVA {
 
 		public void Save() {
 			ConfigNode _temp = ConfigNode.CreateConfigFromObject(this, new ConfigNode());
-			_temp.Save(File_settings);
+			_temp.Save(FileConfig);
+			Quick.Log ("Settings Saved");
 		}
 		public void Load() {
-			if (File.Exists (File_settings)) {
-				ConfigNode _temp = ConfigNode.Load (File_settings);
-				ConfigNode.LoadObjectFromConfig (this, _temp);
-				Quick.Log ("Load");
+			if (File.Exists (FileConfig)) {
+				try {
+					ConfigNode _temp = ConfigNode.Load (FileConfig);
+					ConfigNode.LoadObjectFromConfig (this, _temp);
+				} catch {
+					Save ();
+				}
+				Quick.Log ("Settings Loaded");
+			} else {
+				Save ();
 			}
 		}
 	}

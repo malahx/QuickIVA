@@ -8,6 +8,7 @@
     <RootNamespace>QuickIVA</RootNamespace>
     <AssemblyName>QuickIVA</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <ReleaseVersion>1.02</ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -46,9 +47,11 @@
     <Compile Include="QI.cs" />
     <Compile Include="QI_Settings.cs" />
     <Compile Include="QI_GUI.cs" />
-    <Compile Include="QI_Toolbar.cs" />
     <Compile Include="ToolbarWrapper.cs" />
     <Compile Include="QI_IVA.cs" />
+    <Compile Include="QI_Quick.cs" />
+    <Compile Include="QI_ToolbarBlizzy.cs" />
+    <Compile Include="QI_ToolbarStock.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -59,11 +62,13 @@
     <None Include="GameData\QuickIVA\QuickIVA.version" />
     <None Include="GameData\QuickIVA\README.md" />
     <None Include="GameData\QuickIVA\Plugins\QuickIVA.dll" />
-    <None Include="GameData\QuickIVA\Config.txt" />
     <None Include="BlizzyToolBar.xcf" />
     <None Include="StockToolBar.xcf" />
+    <None Include="GameData\QuickIVA\Textures\BlizzyToolBar.dds" />
+    <None Include="GameData\QuickIVA\Textures\StockToolBar.dds" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="GameData\" />
+    <Folder Include="GameData\QuickIVA\Textures\" />
   </ItemGroup>
 </Project>

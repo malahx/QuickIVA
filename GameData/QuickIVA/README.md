@@ -1,5 +1,5 @@
 ﻿#### QuickIVA
-#### A plugin for Kerbal Space Program 1.0.0
+#### A plugin for Kerbal Space Program 1.0.2
 #### Copyright 2015 Malah
 
 This program is free software: you can redistribute it and/or modify
@@ -49,12 +49,19 @@ Delete the QuickIVA folder in your KSP/GameData folder.
 
 #### Changelog
 
+v1.03 - 2015.04.30
+* Fix: Corrected an error on the GoEVA,
+* Fix: Corrected the Stock Toolbar which can show two buttons,
+* Fix: Enabled the loading of the settings at the Space Center,
+* Updated ToolbarWrapper to 1.7.9
+* Updated to KSP 1.02
+
 v1.02 - 2015.04.28
 * Fix: Converted textures to DDS,
 * Fix: Corrected the Stock Toolbar icon not being created,
 * Fix: Deleted the default QuickIVA's config file to keep your config file after an update,
 * Fix: Some minor fixes,
-* Updated to 1.00
+* Updated to KSP 1.00
 
 v1.01 - 2015.02.13
 * Fix: Change the default EVA shortcut to "Home", (backspace is the default shortcut for abort).

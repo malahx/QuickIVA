@@ -23,15 +23,15 @@ using UnityEngine;
 namespace QuickIVA {
 	public class QIVA : Quick {
 
-		internal bool isGoneIVA = false;
-		internal bool hasShowUI = false;
-		internal bool NoMoreGoIVA = false;
-		internal Kerbal EVAKerbal = null;
-		internal ScreenMessage ScreenMsg = null;
+		protected bool isGoneIVA = false;
+		protected bool hasShowUI = false;
+		protected bool NoMoreGoIVA = false;
+		protected Kerbal EVAKerbal = null;
+		protected ScreenMessage ScreenMsg = null;
 
-		internal bool DisableThirdPersonVesselTmpPAUSE = false;
+		protected bool DisableThirdPersonVesselTmpPAUSE = false;
 
-		internal bool BlockedGoIVA {
+		protected bool BlockedGoIVA {
 			get {
 				return isGoneIVA || NoMoreGoIVA;
 			}
@@ -44,7 +44,7 @@ namespace QuickIVA {
 			}
 		}
 
-		internal bool IVAIsInstantiate {
+		protected bool IVAIsInstantiate {
 			get {
 				if (CameraManager.Instance == null) {
 					return false;
@@ -53,7 +53,7 @@ namespace QuickIVA {
 			}
 		}
 
-		internal bool isIVA {
+		protected bool isIVA {
 			get {
 				if (!IVAIsInstantiate) {
 					return false;
@@ -62,7 +62,7 @@ namespace QuickIVA {
 			}
 		}
 
-		internal bool isMAP {
+		protected bool isMAP {
 			get {
 				if (!IVAIsInstantiate) {
 					return false;
@@ -71,7 +71,7 @@ namespace QuickIVA {
 			}
 		}
 
-		internal Kerbal CheckIVAKerbal(Vessel vessel) {
+		protected Kerbal CheckIVAKerbal(Vessel vessel) {
 			List<InternalSeat> _seats = VesselSeats (vessel);
 			foreach (InternalSeat _seat in _seats) {
 				Kerbal _kerbal = _seat.kerbalRef;
@@ -82,27 +82,27 @@ namespace QuickIVA {
 			return null;
 		}
 
-		internal bool CheckEVAUnlocked (Vessel vessel) {
+		protected bool CheckEVAUnlocked (Vessel vessel) {
 			return GameVariables.Instance.EVAIsPossible(GameVariables.Instance.UnlockedEVA (ScenarioUpgradeableFacilities.GetFacilityLevel (SpaceCenterFacility.AstronautComplex)), vessel);
 		}
 
-		internal bool CheckVessel(Vessel vessel) {
+		protected bool CheckVessel(Vessel vessel) {
 			return !vessel.isEVA && !vessel.packed && (vessel.situation != Vessel.Situations.PRELAUNCH || !QSettings.Instance.IVAatLaunch);
 		}
 
-		internal bool KerbalIsOnVessel (Vessel vessel, Kerbal kerbal) {
+		protected bool KerbalIsOnVessel (Vessel vessel, Kerbal kerbal) {
 			if (kerbal == null) {
 				return false;
 			}
 			return vessel.GetVesselCrew ().Contains (kerbal.protoCrewMember);
 		}
 
-		internal List<InternalSeat> VesselSeats(Vessel vessel) {
+		protected List<InternalSeat> VesselSeats(Vessel vessel) {
 			bool _hasOnlyPlaceholder;
 			return VesselSeats (vessel, true, out _hasOnlyPlaceholder);
 		}
 
-		internal List<InternalSeat> VesselSeats(Vessel vessel, bool withPlaceholder, out bool hasOnlyPlaceholder) {
+		protected List<InternalSeat> VesselSeats(Vessel vessel, bool withPlaceholder, out bool hasOnlyPlaceholder) {
 			int _index = 0;
 			hasOnlyPlaceholder = true;
 			List<Part> _parts = vessel.parts;
@@ -133,13 +133,13 @@ namespace QuickIVA {
 			return _result;
 		}
 			
-		internal bool VesselHasSeatTaken(Vessel vessel) {
+		protected bool VesselHasSeatTaken(Vessel vessel) {
 			bool _hasOnlyPlaceholder;
 			Kerbal IVAKerbal;
 			return VesselHasSeatTaken(vessel, out IVAKerbal, out _hasOnlyPlaceholder);
 		}
 
-		internal bool VesselHasSeatTaken(Vessel vessel, out Kerbal IVAKerbal, out bool hasOnlyPlaceholder) {
+		protected bool VesselHasSeatTaken(Vessel vessel, out Kerbal IVAKerbal, out bool hasOnlyPlaceholder) {
 			hasOnlyPlaceholder = true;
 			bool _result = false;
 			Kerbal _first = null;
@@ -159,12 +159,12 @@ namespace QuickIVA {
 			return _result;
 		}
 
-		internal bool VesselHasCrewAlive (Vessel vessel) {
+		protected bool VesselHasCrewAlive (Vessel vessel) {
 			Kerbal _first;
 			return  VesselHasCrewAlive (vessel, out _first);
 		}
 
-		internal bool VesselHasCrewAlive (Vessel vessel, out Kerbal first) {
+		protected bool VesselHasCrewAlive (Vessel vessel, out Kerbal first) {
 			first = null;
 			List<ProtoCrewMember> _crews = vessel.GetVesselCrew ();
 			foreach (ProtoCrewMember protoCrewMember in _crews) {
@@ -177,7 +177,7 @@ namespace QuickIVA {
 			return false;
 		}
 
-		internal bool VesselIsAlone (Vessel vessel) {
+		protected bool VesselIsAlone (Vessel vessel) {
 			List<Vessel> _vessels = FlightGlobals.Vessels;
 			foreach (Vessel _vessel in _vessels) {
 				if (_vessel != vessel && _vessel.loaded) {
@@ -187,7 +187,7 @@ namespace QuickIVA {
 			return true;
 		}
 
-		internal void DisableALL(bool enable) {
+		protected void DisableALL(bool enable) {
 			//DisableShowUIonIVA (enable);
 			//DisableThirdPersonVessel (enable);
 			HideUIonIVA (enable);
@@ -219,7 +219,7 @@ namespace QuickIVA {
 			}
 		}*/
 
-		internal void ShowOrHideUI() {
+		protected void ShowOrHideUI() {
 			if (QSettings.Instance.AutoHideUI) {
 				if (!isIVA && !hasShowUI) {
 					GameEvents.onShowUI.Fire ();
@@ -233,7 +233,7 @@ namespace QuickIVA {
 			}
 		}
 
-		internal void HideUIonIVA(bool enable) {
+		protected void HideUIonIVA(bool enable) {
 			if (QSettings.Instance.AutoHideUI) {
 				if (isGoneIVA) {
 					if (enable) {
@@ -247,7 +247,7 @@ namespace QuickIVA {
 			}
 		}
 
-		internal void DisableMapView(bool enable) {
+		protected void DisableMapView(bool enable) {
 			if (enable) {
 				if (QSettings.Instance.DisableMapView) {
 					if (isGoneIVA && !InputLockManager.IsLocked (ControlTypes.MAP)) {
@@ -287,7 +287,7 @@ namespace QuickIVA {
 			}
 		}*/
 
-		internal void DisableThirdPersonVesselFixed(bool enable) {
+		protected void DisableThirdPersonVesselFixed(bool enable) {
 			if (enable) {
 				if (QSettings.Instance.DisableThirdPersonVessel) {
 					if (isGoneIVA) {
@@ -309,7 +309,7 @@ namespace QuickIVA {
 			}
 		}
 
-		internal void ScrMsg(bool simple, Kerbal kerbal) {
+		protected void ScrMsg(bool simple, Kerbal kerbal) {
 			if (ScreenMsg != null) {
 				ScreenMsg.duration = 0;
 			}
@@ -320,7 +320,7 @@ namespace QuickIVA {
 			}
 		}
 
-		internal void GoRecovery(Vessel vessel) {
+		protected void GoRecovery(Vessel vessel) {
 			if (vessel.IsRecoverable) {
 				GameEvents.OnVesselRecoveryRequested.Fire (vessel);
 			} else {
@@ -328,7 +328,7 @@ namespace QuickIVA {
 			}
 		}
 
-		internal void GoEVA(Vessel vessel) {
+		protected void GoEVA(Vessel vessel) {
 			if (CheckEVAUnlocked (vessel)) {
 				if (!vessel.isEVA && !vessel.packed) {
 					if (vessel.GetCrewCount () > 0) {
@@ -348,11 +348,11 @@ namespace QuickIVA {
 					ScreenMessages.PostScreenMessage ("[QuickIVA] You can't EVA an EVA.", 5, ScreenMessageStyle.UPPER_CENTER);
 				}
 			} else {
-				ScreenMessages.PostScreenMessage ("[QuickIVA] EVA is locked:" + GameVariables.Instance.GetEVALockedReason (vessel), 5, ScreenMessageStyle.UPPER_CENTER);
+				ScreenMessages.PostScreenMessage ("[QuickIVA] EVA is locked:" + GameVariables.Instance.GetEVALockedReason (vessel, vessel.GetVesselCrew()[0]), 5, ScreenMessageStyle.UPPER_CENTER);
 			}
 		}
 
-		internal void GoIVA(Vessel vessel) {
+		protected void GoIVA(Vessel vessel) {
 			if (!BlockedGoIVA && HighLogic.CurrentGame.Parameters.Flight.CanIVA) {
 				if (vessel.GetCrewCount () > 0) {
 					if (VesselHasCrewAlive (vessel)) {

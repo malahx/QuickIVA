@@ -24,7 +24,7 @@ namespace QuickIVA {
 	[KSPAddon(KSPAddon.Startup.SpaceCentre, false)]
 	public class QStockToolbar : MonoBehaviour {
 
-		internal static QBlizzyToolbar BlizzyToolbar;
+		[KSPField(isPersistant = true)] internal static QBlizzyToolbar BlizzyToolbar;
 	
 		internal static bool Enabled {
 			get {
@@ -45,11 +45,11 @@ namespace QuickIVA {
 			}
 		}
 
-		private ApplicationLauncherButton appLauncherButton;
+		[KSPField(isPersistant = true)] private ApplicationLauncherButton appLauncherButton;
 
 		internal static bool isAvailable {
 			get {
-				return ApplicationLauncher.Instance != null;
+				return ApplicationLauncher.Ready && ApplicationLauncher.Instance != null;
 			}
 		}
 
@@ -61,15 +61,17 @@ namespace QuickIVA {
 		internal void Awake() {
 			Instance = this;
 			QGUI.Awake ();
-			BlizzyToolbar = new QBlizzyToolbar ();
+			if (BlizzyToolbar == null) BlizzyToolbar = new QBlizzyToolbar ();
 			GameEvents.onGUIApplicationLauncherDestroyed.Add (AppLauncherDestroyed);
 			GameEvents.onGameSceneLoadRequested.Add (AppLauncherDestroyed);
+			GameEvents.onGUIApplicationLauncherUnreadifying.Add (AppLauncherDestroyed);
 		}
 
 		internal void Start() {
 			if (!HighLogic.LoadedSceneIsGame) {
 				return;
 			}
+			QSettings.Instance.Load ();
 			BlizzyToolbar.Start ();
 			StartCoroutine (AppLauncherReady ());
 		}
@@ -79,9 +81,6 @@ namespace QuickIVA {
 				yield break;
 			}
 			while (!isAvailable) {
-				yield return 0;
-			}
-			while (!ApplicationLauncher.Ready) {
 				yield return 0;
 			}
 			Init ();
@@ -99,6 +98,7 @@ namespace QuickIVA {
 			BlizzyToolbar.OnDestroy ();
 			GameEvents.onGUIApplicationLauncherDestroyed.Remove (AppLauncherDestroyed);
 			GameEvents.onGameSceneLoadRequested.Remove (AppLauncherDestroyed);
+			GameEvents.onGUIApplicationLauncherUnreadifying.Remove (AppLauncherDestroyed);
 		}
 
 		private void Init() {

@@ -26,7 +26,6 @@ namespace QuickIVA {
 	public class QuickIVA : QIVA {
 
 		private void Awake() {
-			QSettings.Instance.Load ();
 			if (QSettings.Instance.Enabled) {
 				GameEvents.onVesselChange.Add (OnVesselChange);
 				GameEvents.onLaunch.Add (OnLaunch);
@@ -35,6 +34,10 @@ namespace QuickIVA {
 				GameEvents.onCrewBoardVessel.Add (OnCrewBoardVessel);
 				GameEvents.onCrewOnEva.Add (OnCrewOnEva);
 			}
+		}
+
+		private void Start() {
+			QSettings.Instance.Load ();
 		}
 
 		private void OnDestroy() {

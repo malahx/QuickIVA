@@ -8,7 +8,7 @@
     <RootNamespace>QuickIVA</RootNamespace>
     <AssemblyName>QuickIVA</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <ReleaseVersion>1.03</ReleaseVersion>
+    <ReleaseVersion>1.10</ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -52,6 +52,7 @@
     <Compile Include="QI_Quick.cs" />
     <Compile Include="QI_ToolbarBlizzy.cs" />
     <Compile Include="QI_ToolbarStock.cs" />
+    <Compile Include="QI_API_ProbeControlRoom.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

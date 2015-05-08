@@ -58,7 +58,7 @@ namespace QuickIVA {
 				if (!IVAIsInstantiate) {
 					return false;
 				}
-				return CameraManager.Instance.currentCameraMode == CameraManager.CameraMode.IVA;
+				return CameraManager.Instance.currentCameraMode == CameraManager.CameraMode.IVA || (CameraManager.Instance.currentCameraMode == CameraManager.CameraMode.Internal && QProbeControlRoom.isActive);
 			}
 		}
 
@@ -291,14 +291,26 @@ namespace QuickIVA {
 			if (enable) {
 				if (QSettings.Instance.DisableThirdPersonVessel) {
 					if (isGoneIVA) {
-						if (!FlightDriver.Pause && isIVA) {
-							FlightDriver.SetPause (true);
-							DisableThirdPersonVesselTmpPAUSE = true;
-							Warning ("You can't switch camera.");
+						if (isIVA) {
+							if (QProbeControlRoom.isActive) {
+								QProbeControlRoom.WasActive = QProbeControlRoom.isActive;
+								QProbeControlRoom.isActive = false;
+								Warning ("ProbeControlRoom Lock");
+							}
+							if (!FlightDriver.Pause) {
+								FlightDriver.SetPause (true);
+								DisableThirdPersonVesselTmpPAUSE = true;
+								Warning ("You can't switch camera.");
+							}
 						}
 					}
 				}
 			} else {
+				if (QProbeControlRoom.isLoaded && QProbeControlRoom.WasActive) {
+					QProbeControlRoom.isActive = QProbeControlRoom.WasActive;
+					QProbeControlRoom.WasActive = false;
+					Warning ("ProbeControlRoom Unlock");
+				}
 				if (DisableThirdPersonVesselTmpPAUSE) {
 					if (FlightDriver.Pause) {
 						FlightDriver.SetPause (false);
@@ -353,48 +365,53 @@ namespace QuickIVA {
 		}
 
 		protected void GoIVA(Vessel vessel) {
-			if (!BlockedGoIVA && HighLogic.CurrentGame.Parameters.Flight.CanIVA) {
-				if (vessel.GetCrewCount () > 0) {
-					if (VesselHasCrewAlive (vessel)) {
-						bool _VesselhasOnlyPlaceholder;
-						Kerbal _IVAKerbal;
-						if (VesselHasSeatTaken (vessel, out _IVAKerbal, out _VesselhasOnlyPlaceholder)) {
-							if (EVAKerbal != null) {
-								if (vessel.GetVesselCrew ().Contains (EVAKerbal.protoCrewMember)) {
-									_IVAKerbal = EVAKerbal;
-								} else {
-									EVAKerbal = null;
-								}
+			if (BlockedGoIVA || !HighLogic.CurrentGame.Parameters.Flight.CanIVA || !FlightGlobals.ready) {
+				return;
+			}
+			if (!QProbeControlRoom.vesselCanStockIVA) {
+				isGoneIVA = QProbeControlRoom.startIVA ();
+			} else if (vessel.GetCrewCount () > 0) {
+				if (VesselHasCrewAlive (vessel)) {
+					bool _VesselhasOnlyPlaceholder;
+					Kerbal _IVAKerbal;
+					if (VesselHasSeatTaken (vessel, out _IVAKerbal, out _VesselhasOnlyPlaceholder)) {
+						if (EVAKerbal != null) {
+							if (vessel.GetVesselCrew ().Contains (EVAKerbal.protoCrewMember)) {
+								_IVAKerbal = EVAKerbal;
+							} else {
+								EVAKerbal = null;
 							}
-							if (_IVAKerbal != null) {
-								if (KerbalIsOnVessel (vessel, _IVAKerbal)) {
-									isGoneIVA = CameraManager.Instance.SetCameraIVA (_IVAKerbal, true);
-									Log (string.Format("Go IVA on {0}({1}) experienceTrait: {2}, partName: ({3}){4}", _IVAKerbal.crewMemberName, _IVAKerbal.protoCrewMember.seatIdx, _IVAKerbal.protoCrewMember.experienceTrait.Title, _IVAKerbal.protoCrewMember.seat.part.partInfo.category, _IVAKerbal.protoCrewMember.seat.part.name));
-									ScrMsg (false, _IVAKerbal);
-								} else {
-									isGoneIVA = CameraManager.Instance.SetCameraIVA ();
-									Log ("Go IVA (first Kerbal selected)");
-								}
+						}
+						if (_IVAKerbal != null) {
+							if (KerbalIsOnVessel (vessel, _IVAKerbal)) {
+								isGoneIVA = CameraManager.Instance.SetCameraIVA (_IVAKerbal, true);
+								Log (string.Format ("Go IVA on {0}({1}) experienceTrait: {2}, partName: ({3}){4}", _IVAKerbal.crewMemberName, _IVAKerbal.protoCrewMember.seatIdx, _IVAKerbal.protoCrewMember.experienceTrait.Title, _IVAKerbal.protoCrewMember.seat.part.partInfo.category, _IVAKerbal.protoCrewMember.seat.part.name));
+								ScrMsg (false, _IVAKerbal);
 							} else {
 								isGoneIVA = CameraManager.Instance.SetCameraIVA ();
+								Log ("Go IVA (first Kerbal selected)");
 							}
-							if (isGoneIVA) {
-								DisableALL (true);
-								EVAKerbal = null;
-							} else {
-								Warning ("Can't Go IVA now!");
-							}
-						} else if (_VesselhasOnlyPlaceholder) {
-							NoMoreGoIVA = true;
-							DisableALL (false);
-							Warning ("Disable GoIVA, it seems that this vessel has no IVA!");
+						} else {
+							isGoneIVA = CameraManager.Instance.SetCameraIVA ();
 						}
+					} else if (_VesselhasOnlyPlaceholder) {
+						NoMoreGoIVA = true;
+						DisableALL (false);
+						Warning ("Disable GoIVA, it seems that this vessel has no IVA!");
+						return;
 					}
-				} else {
-					NoMoreGoIVA = true;
-					DisableALL (false);
-					Warning ("Disable GoIVA, this vessel has no crew!");
 				}
+			} else {
+				NoMoreGoIVA = true;
+				DisableALL (false);
+				Warning ("Disable GoIVA, this vessel has no crew!");
+				return;
+			}
+			if (isGoneIVA) {
+				DisableALL (true);
+				EVAKerbal = null;
+			} else {
+				Warning ("Can't Go IVA now!");
 			}
 		}
 	}

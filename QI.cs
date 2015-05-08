@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 
 namespace QuickIVA {
@@ -25,15 +26,23 @@ namespace QuickIVA {
 	[KSPAddon(KSPAddon.Startup.Flight, false)]
 	public class QuickIVA : QIVA {
 
+		public static QuickIVA Instance {
+			get;
+			private set;
+		}
+
 		private void Awake() {
-			if (QSettings.Instance.Enabled) {
-				GameEvents.onVesselChange.Add (OnVesselChange);
-				GameEvents.onLaunch.Add (OnLaunch);
-				GameEvents.onGameSceneLoadRequested.Add (OnGameSceneLoadRequested);
-				GameEvents.onShowUI.Add (OnShowUI);
-				GameEvents.onCrewBoardVessel.Add (OnCrewBoardVessel);
-				GameEvents.onCrewOnEva.Add (OnCrewOnEva);
+			if (!QSettings.Instance.Enabled || Instance != null) {
+				Destroy (this);
 			}
+			Instance = this;
+			QProbeControlRoom.Awake ();
+			GameEvents.onVesselChange.Add (OnVesselChange);
+			GameEvents.onLaunch.Add (OnLaunch);
+			GameEvents.onGameSceneLoadRequested.Add (OnGameSceneLoadRequested);
+			GameEvents.onShowUI.Add (OnShowUI);
+			GameEvents.onCrewBoardVessel.Add (OnCrewBoardVessel);
+			GameEvents.onCrewOnEva.Add (OnCrewOnEva);
 		}
 
 		private void Start() {

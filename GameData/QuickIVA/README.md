@@ -20,20 +20,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 QuickIVA is a small plugin which adds a switch to the IVA at the loading or the launch of a vessel.
 
 I suggest you to use the awesome mod RasterPropMonitor which makes the IVA usable.
+QuickIVA support the mod Probe Control Room.
 
 #### How does it work ?
 
 It will put you on IVA at launch or at load. It will select preferably the first Pilot on a pod or the first Kerbal on a pod.
 
 It will not put you on IVA, if there are:
-- no Kerbals alive on the vessel,
-- no IVA model.
+* no Kerbals alive on the vessel,
+* no IVA model.
 
 The HUD can be automaticaly hide and the others camera / MapView can be disabled.
 
 Keyboard shortcuts:
-- "end" to recovery,
-- "home" to EVA.
+* "end" to recovery,
+* "home" to EVA.
 
 #### How to install it?
 
@@ -49,7 +50,11 @@ Delete the QuickIVA folder in your KSP/GameData folder.
 
 #### Changelog
 
-v1.03 - 2015.04.30
+v1.10 - 2015.05.08
+* New: Added the support of the mod Probe Control Room,
+* Fix: (Again) corrected the Stock Toolbar which can show two buttons,
+
+v1.03 - 2015.05.03
 * Fix: Corrected an error on the GoEVA,
 * Fix: Corrected the Stock Toolbar which can show two buttons,
 * Fix: Enabled the loading of the settings at the Space Center,
@@ -73,6 +78,7 @@ v1.00 - 2015.02.07
 
 * to Alshain and monstah to have requested this mod,
 * to Mihara and MOARdv for the awesome mod RasterPropMonitor,
+* to Tabakhase for the mod Probe Control Room,
 * to all mods developers which make this game really huge,
 * to my friend Neimad who corrects my bad english ...
 * to Squad for this awesome game.
@@ -84,3 +90,4 @@ v1.00 - 2015.02.07
 * http://kerbal.curseforge.com/ksp-mods/227809-quickiva
 * https://github.com/malahx/QuickIVA
 * RasterPropMonitor: http://forum.kerbalspaceprogram.com/threads/57603
+* Probe Control Room: http://forum.kerbalspaceprogram.com/threads/67450

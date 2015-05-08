@@ -20,14 +20,24 @@ using System;
 using UnityEngine;
 
 namespace QuickIVA {
-
+	[KSPAddon(KSPAddon.Startup.SpaceCentre, false)]
 	public class QGUI : MonoBehaviour {
 
 		internal static bool WindowSettings = false;
 		private static Rect RectSettings = new Rect();
+		internal static QBlizzyToolbar BlizzyToolbar;
 
-		internal static void Awake() {
+		private void Awake() {
 			RectSettings = new Rect ((Screen.width - 515)/2, (Screen.height - 400)/2, 515, 400);
+			if (BlizzyToolbar == null) BlizzyToolbar = new QBlizzyToolbar ();
+		}
+
+		private void Start() {
+			BlizzyToolbar.Start ();
+		}
+
+		private void OnDestroy() {
+			BlizzyToolbar.OnDestroy ();
 		}
 
 		private static void Lock(bool activate, ControlTypes Ctrl = ControlTypes.None) {
@@ -63,7 +73,7 @@ namespace QuickIVA {
 			SettingsSwitch ();
 			if (!WindowSettings) {
 				QSettings.Instance.Save ();
-				QStockToolbar.BlizzyToolbar.Reset ();
+				BlizzyToolbar.Reset ();
 				QStockToolbar.Instance.Reset ();
 			}
 		}
@@ -74,14 +84,14 @@ namespace QuickIVA {
 			Lock (WindowSettings, ControlTypes.KSC_ALL | ControlTypes.TRACKINGSTATION_UI | ControlTypes.CAMERACONTROLS | ControlTypes.MAP);
 		}
 
-		internal static void OnGUI() {
+		internal void OnGUI() {
 			if (WindowSettings) {
 				GUI.skin = HighLogic.Skin;
 				RectSettings = GUILayout.Window (1584653, RectSettings, DrawSettings, Quick.MOD + " " + Quick.VERSION, GUILayout.Width (RectSettings.width), GUILayout.ExpandHeight(true));
 			}
 		}
 
-		private static void DrawSettings(int id) {
+		private void DrawSettings(int id) {
 			int _rect = 145;
 			GUILayout.BeginVertical();
 			GUILayout.BeginHorizontal();

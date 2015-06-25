@@ -1,5 +1,5 @@
 ﻿#### QuickIVA
-#### A plugin for Kerbal Space Program 1.0.2
+#### A plugin for Kerbal Space Program 1.0.X
 #### Copyright 2015 Malah
 
 This program is free software: you can redistribute it and/or modify
@@ -50,6 +50,9 @@ Delete the QuickIVA folder in your KSP/GameData folder.
 
 #### Changelog
 
+v1.11 - 2015.06.25
+* Updated to KSP 1.0.X
+
 v1.10 - 2015.05.08
 * New: Added the support of the mod Probe Control Room,
 * Fix: (Again) corrected the Stock Toolbar which can show two buttons,
@@ -59,14 +62,14 @@ v1.03 - 2015.05.03
 * Fix: Corrected the Stock Toolbar which can show two buttons,
 * Fix: Enabled the loading of the settings at the Space Center,
 * Updated ToolbarWrapper to 1.7.9
-* Updated to KSP 1.02
+* Updated to KSP 1.0.2
 
 v1.02 - 2015.04.28
 * Fix: Converted textures to DDS,
 * Fix: Corrected the Stock Toolbar icon not being created,
 * Fix: Deleted the default QuickIVA's config file to keep your config file after an update,
 * Fix: Some minor fixes,
-* Updated to KSP 1.00
+* Updated to KSP 1.0.0
 
 v1.01 - 2015.02.13
 * Fix: Change the default EVA shortcut to "Home", (backspace is the default shortcut for abort).
@@ -89,5 +92,5 @@ v1.00 - 2015.02.07
 * https://kerbalstuff.com/mod/568/QuickIVA
 * http://kerbal.curseforge.com/ksp-mods/227809-quickiva
 * https://github.com/malahx/QuickIVA
-* RasterPropMonitor: http://forum.kerbalspaceprogram.com/threads/57603
+* RasterPropMonitor: http://forum.kerbalspaceprogram.com/threads/117471
 * Probe Control Room: http://forum.kerbalspaceprogram.com/threads/67450

@@ -8,7 +8,8 @@
     <RootNamespace>QuickIVA</RootNamespace>
     <AssemblyName>QuickIVA</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <ReleaseVersion>1.11</ReleaseVersion>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -34,22 +35,12 @@
     </CustomCommands>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="Assembly-CSharp">
-      <HintPath>..\lib\1.0.4\Assembly-CSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine">
-      <HintPath>..\lib\1.0.4\UnityEngine.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QI.cs" />
     <Compile Include="QI_Settings.cs" />
     <Compile Include="QI_GUI.cs" />
     <Compile Include="ToolbarWrapper.cs" />
     <Compile Include="QI_IVA.cs" />
-    <Compile Include="QI_Quick.cs" />
     <Compile Include="QI_ToolbarBlizzy.cs" />
     <Compile Include="QI_ToolbarStock.cs" />
     <Compile Include="QI_API_ProbeControlRoom.cs" />
@@ -67,9 +58,27 @@
     <None Include="StockToolBar.xcf" />
     <None Include="GameData\QuickIVA\Textures\BlizzyToolBar.dds" />
     <None Include="GameData\QuickIVA\Textures\StockToolBar.dds" />
+    <None Include="install.sh" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="GameData\" />
     <Folder Include="GameData\QuickIVA\Textures\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>..\lib\Managed\UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>..\lib\Managed\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <HintPath>..\lib\Managed\System.dll</HintPath>
+    </Reference>
+    <Reference Include="KSPUtil">
+      <HintPath>..\lib\Managed\KSPUtil.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\lib\Managed\Assembly-CSharp.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

@@ -1,6 +1,6 @@
 ﻿/* 
 QuickIVA
-Copyright 2015 Malah
+Copyright 2016 Malah
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,53 +20,56 @@ using System;
 using UnityEngine;
 
 namespace QuickIVA {
-	[KSPAddon(KSPAddon.Startup.SpaceCentre, false)]
-	public class QGUI : MonoBehaviour {
+	public partial class QGUI {
 
 		internal static bool WindowSettings = false;
 		private static Rect RectSettings = new Rect();
 		internal static QBlizzyToolbar BlizzyToolbar;
 
-		private void Awake() {
+		protected override void Awake() {
 			RectSettings = new Rect ((Screen.width - 515)/2, (Screen.height - 400)/2, 515, 400);
 			if (BlizzyToolbar == null) BlizzyToolbar = new QBlizzyToolbar ();
+			Log ("Awake", "QGUI");
 		}
 
-		private void Start() {
-			BlizzyToolbar.Start ();
+		protected override void Start() {
+			BlizzyToolbar.Init ();
+			Log ("Start", "QGUI");
 		}
 
-		private void OnDestroy() {
-			BlizzyToolbar.OnDestroy ();
+		protected override void OnDestroy() {
+			BlizzyToolbar.Destroy ();
+			Log ("OnDestroy", "QGUI");
 		}
 
 		private static void Lock(bool activate, ControlTypes Ctrl = ControlTypes.None) {
 			if (HighLogic.LoadedSceneIsFlight) {
 				FlightDriver.SetPause (activate);
 				if (activate) {
-					InputLockManager.SetControlLock (ControlTypes.CAMERACONTROLS | ControlTypes.MAP, "Lock" + Quick.MOD);
+					InputLockManager.SetControlLock (ControlTypes.CAMERACONTROLS | ControlTypes.MAP, "Lock" + MOD);
 					return;
 				}
 			} else if (HighLogic.LoadedSceneIsEditor) {
 				if (activate) {
-					EditorLogic.fetch.Lock(true, true, true, "EditorLock" + Quick.MOD);
+					EditorLogic.fetch.Lock(true, true, true, "EditorLock" + MOD);
 					return;
 				} else {
-					EditorLogic.fetch.Unlock ("EditorLock" + Quick.MOD);
+					EditorLogic.fetch.Unlock ("EditorLock" + MOD);
 				}
 			}
 			if (activate) {
-				InputLockManager.SetControlLock (Ctrl, "Lock" + Quick.MOD);
+				InputLockManager.SetControlLock (Ctrl, "Lock" + MOD);
 				return;
 			} else {
-				InputLockManager.RemoveControlLock ("Lock" + Quick.MOD);
+				InputLockManager.RemoveControlLock ("Lock" + MOD);
 			}
-			if (InputLockManager.GetControlLock ("Lock" + Quick.MOD) != ControlTypes.None) {
-				InputLockManager.RemoveControlLock ("Lock" + Quick.MOD);
+			if (InputLockManager.GetControlLock ("Lock" + MOD) != ControlTypes.None) {
+				InputLockManager.RemoveControlLock ("Lock" + MOD);
 			}
-			if (InputLockManager.GetControlLock ("EditorLock" + Quick.MOD) != ControlTypes.None) {
-				InputLockManager.RemoveControlLock ("EditorLock" + Quick.MOD);
+			if (InputLockManager.GetControlLock ("EditorLock" + MOD) != ControlTypes.None) {
+				InputLockManager.RemoveControlLock ("EditorLock" + MOD);
 			}
+			Log ("Lock: " + activate, "QGUI");
 		}
 
 		public static void Settings() {
@@ -82,12 +85,13 @@ namespace QuickIVA {
 			WindowSettings = !WindowSettings;
 			QStockToolbar.Instance.Set (WindowSettings);
 			Lock (WindowSettings, ControlTypes.KSC_ALL | ControlTypes.TRACKINGSTATION_UI | ControlTypes.CAMERACONTROLS | ControlTypes.MAP);
+			Log ("SettingsSwitch", "QGUI");
 		}
 
 		internal void OnGUI() {
 			if (WindowSettings) {
 				GUI.skin = HighLogic.Skin;
-				RectSettings = GUILayout.Window (1584653, RectSettings, DrawSettings, Quick.MOD + " " + Quick.VERSION, GUILayout.Width (RectSettings.width), GUILayout.ExpandHeight(true));
+				RectSettings = GUILayout.Window (1584653, RectSettings, DrawSettings, MOD + " " + VERSION, GUILayout.Width (RectSettings.width), GUILayout.ExpandHeight(true));
 			}
 		}
 
@@ -164,13 +168,13 @@ namespace QuickIVA {
 				try {
 					Input.GetKey(QSettings.Instance.KeyRecovery);
 				} catch {
-					Quick.Warning ("Wrong key: " + QSettings.Instance.KeyRecovery);
+					Warning ("Wrong key: " + QSettings.Instance.KeyRecovery, "QGUI");
 					QSettings.Instance.KeyRecovery = "end";
 				}
 				try {
 					Input.GetKey(QSettings.Instance.KeyEVA);
 				} catch {
-					Quick.Warning ("Wrong key: " + QSettings.Instance.KeyEVA);
+					Warning ("Wrong key: " + QSettings.Instance.KeyEVA, "QGUI");
 					QSettings.Instance.KeyEVA = "home";
 				}
 				Settings ();

@@ -1,6 +1,6 @@
 ﻿/* 
 QuickIVA
-Copyright 2015 Malah
+Copyright 2016 Malah
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -24,149 +24,42 @@ using UnityEngine;
 namespace QuickIVA {
 
 	[KSPAddon(KSPAddon.Startup.Flight, false)]
-	public class QuickIVA : QIVA {
+	public partial class QIVA : QuickIVA {}
 
-		public static QuickIVA Instance {
-			get;
-			private set;
-		}
+	[KSPAddon(KSPAddon.Startup.SpaceCentre, false)]
+	public partial class QGUI : QuickIVA {}
 
-		private void Awake() {
-			if (!QSettings.Instance.Enabled || Instance != null) {
-				Destroy (this);
+	public class QuickIVA : MonoBehaviour {
+
+		protected readonly static string VERSION = Assembly.GetAssembly(typeof(QuickIVA)).GetName().Version.Major + "." + Assembly.GetAssembly(typeof(QuickIVA)).GetName().Version.Minor + Assembly.GetAssembly(typeof(QuickIVA)).GetName().Version.Build;
+		protected readonly static string MOD = Assembly.GetAssembly(typeof(QuickIVA)).GetName().Name;
+
+		protected static void Log(string String, string Title = null) {
+			if (Title == null) {
+				Title = MOD;
+			} else {
+				Title = string.Format ("{0}({1})", MOD, Title);
 			}
-			Instance = this;
-			QProbeControlRoom.Awake ();
-			GameEvents.onVesselChange.Add (OnVesselChange);
-			GameEvents.onLaunch.Add (OnLaunch);
-			GameEvents.onGameSceneLoadRequested.Add (OnGameSceneLoadRequested);
-			GameEvents.onShowUI.Add (OnShowUI);
-			GameEvents.onCrewBoardVessel.Add (OnCrewBoardVessel);
-			GameEvents.onCrewOnEva.Add (OnCrewOnEva);
-		}
-
-		private void Start() {
-			QSettings.Instance.Load ();
-		}
-
-		private void OnDestroy() {
-			GameEvents.onVesselChange.Remove (OnVesselChange);
-			GameEvents.onLaunch.Remove (OnLaunch);
-			GameEvents.onGameSceneLoadRequested.Remove (OnGameSceneLoadRequested);
-			GameEvents.onShowUI.Remove (OnShowUI);
-			GameEvents.onCrewBoardVessel.Remove (OnCrewBoardVessel);
-			GameEvents.onCrewOnEva.Add (OnCrewOnEva);
-		}
-
-		private void OnVesselChange(Vessel vessel) {
-			BlockedGoIVA = false;
-			DisableALL (false);
-		}
-
-		// Go IVA at Launch
-		private void OnLaunch(EventReport EventReport) {
-			if (QSettings.Instance.IVAatLaunch) {
-				GoIVA (FlightGlobals.ActiveVessel);
+			if (QSettings.Instance.Debug) {
+				Debug.Log (string.Format ("{0}[{1}]: {2}", Title, VERSION, String));
 			}
 		}
-
-		// Disable all things at Scene Load Request
-		private void OnGameSceneLoadRequested(GameScenes GameScene) {
-			DisableALL (false);
-		}
-
-		// Disable UI
-		private void OnShowUI() {
-			if (QSettings.Instance.DisableShowUIonIVA) {
-				if (isIVA) {
-					hasShowUI = true;
-				}
+		protected static void Warning(string String, string Title = null) {
+			if (Title == null) {
+				Title = MOD;
+			} else {
+				Title = string.Format ("{0}({1})", MOD, Title);
 			}
+			Debug.LogWarning (string.Format ("{0}[{1}]: {2}", Title, VERSION, String));
 		}
-
-		// Which kerbal go to EVA
-		private void OnCrewOnEva(GameEvents.FromToAction<Part, Part> part) {
-			ScrMsg (true, part.to.protoModuleCrew[0].KerbalRef);
+		protected virtual void Awake() {
+			Log ("Awake");
 		}
-
-		// Select the good kerbal on IVA after an EVA
-		private void OnCrewBoardVessel(GameEvents.FromToAction<Part, Part> part) {
-			ProtoCrewMember _pcrew = part.to.protoModuleCrew.Find (item => item.KerbalRef.crewMemberName == part.from.vessel.vesselName);
-			if (_pcrew != null) {
-				EVAKerbal = _pcrew.KerbalRef;
-			}
+		protected virtual void Start() {
+			Log ("Start");
 		}
-
-		// Disable third person view on CAMERA_MODE, CAMERA_NEXT, FOCUS_NEXT_VESSEL, FOCUS_PREV_VESSEL
-		private void FixedUpdate() {
-			if (QSettings.Instance.Enabled) {
-				if (HighLogic.LoadedSceneIsFlight) {
-					if (FlightGlobals.ready && !FlightDriver.Pause) {
-						Vessel _vessel = FlightGlobals.ActiveVessel;
-						if (GameSettings.CAMERA_MODE.GetKeyDown ()) {
-							DisableThirdPersonVesselFixed (true);
-						}
-						if (GameSettings.CAMERA_NEXT.GetKeyDown ()) {
-							if (VesselSeats (_vessel).Count == 1) {
-								DisableThirdPersonVesselFixed (true);
-							}
-						}
-						if (GameSettings.FOCUS_NEXT_VESSEL.GetKeyDown () || GameSettings.FOCUS_PREV_VESSEL.GetKeyDown ()) {
-							if (VesselIsAlone (_vessel)) {
-								DisableThirdPersonVesselFixed (true);
-							}
-						}
-					}
-				}
-			}
-		}
-
-		// Keyboard shortcuts
-		private void Update() {
-			if (QSettings.Instance.KeyEnabled) {
-				if (HighLogic.LoadedSceneIsFlight) {
-					if (FlightGlobals.ready && !FlightDriver.Pause) {
-						if (Input.GetKeyDown (QSettings.Instance.KeyRecovery)) {
-							GoRecovery (FlightGlobals.ActiveVessel);
-						}
-						if (Input.GetKeyDown (QSettings.Instance.KeyEVA)) {
-							GoEVA (FlightGlobals.ActiveVessel);
-						}
-					}
-				}
-			}
-		}
-
-		// Disable third person view, Go IVA on Load, Which Kerbal you are on IVA
-		private void LateUpdate() {
-			if (QSettings.Instance.Enabled) {
-				if (HighLogic.LoadedSceneIsFlight) {
-					DisableThirdPersonVesselFixed (false);
-					if (FlightGlobals.ready && !FlightDriver.Pause) {
-						if (IVAIsInstantiate && !isIVA && !isMAP) {
-							Vessel _vessel = FlightGlobals.ActiveVessel;
-							if (CheckVessel (_vessel)) {
-								GoIVA (_vessel);
-							}
-						}
-						if (isIVA && GameSettings.CAMERA_NEXT.GetKeyDown ()) {
-							Vessel _vessel = FlightGlobals.ActiveVessel;
-							if (VesselSeats (_vessel).Count > 1) {
-								if (CheckEVAUnlocked (_vessel)) {
-									Kerbal _kerbal = CheckIVAKerbal (_vessel);
-									if (_kerbal != null) {
-										Log (string.Format ("IVA switch to {0}({1}) experienceTrait: {2}, partName: ({3}){4}", _kerbal.crewMemberName, _kerbal.protoCrewMember.seatIdx, _kerbal.protoCrewMember.experienceTrait.Title, _kerbal.protoCrewMember.seat.part.partInfo.category, _kerbal.protoCrewMember.seat.part.name));
-										ScrMsg (false, _kerbal);
-									} else {
-										Log ("Can't find the current Kerbal");
-									}
-								}
-							}
-						}
-						ShowOrHideUI ();
-					}
-				}
-			}
+		protected virtual void OnDestroy() {
+			Log ("OnDestroy");
 		}
 	}
 }

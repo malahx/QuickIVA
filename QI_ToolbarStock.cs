@@ -1,6 +1,6 @@
 ﻿/* 
 QuickIVA
-Copyright 2015 Malah
+Copyright 2016 Malah
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,13 +16,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>. 
 */
 
+using KSP.UI.Screens;
 using System;
 using System.Collections;
 using UnityEngine;
 
 namespace QuickIVA {
 	[KSPAddon(KSPAddon.Startup.MainMenu, true)]
-	public class QStockToolbar : MonoBehaviour {
+	public class QStockToolbar : QuickIVA {
 
 		internal static bool Enabled {
 			get {
@@ -37,7 +38,7 @@ namespace QuickIVA {
 		}
 		
 		private ApplicationLauncher.AppScenes AppScenes = ApplicationLauncher.AppScenes.SPACECENTER;
-		private static string TexturePath = Quick.MOD + "/Textures/StockToolBar";
+		private static string TexturePath = MOD + "/Textures/StockToolBar";
 
 		private void OnClick() { 
 			QGUI.Settings ();
@@ -62,7 +63,7 @@ namespace QuickIVA {
 			private set;
 		}
 
-		private void Awake() {
+		protected override void Awake() {
 			if (Instance != null) {
 				Destroy (this);
 				return;
@@ -72,6 +73,7 @@ namespace QuickIVA {
 			GameEvents.onGUIApplicationLauncherReady.Add (AppLauncherReady);
 			GameEvents.onGUIApplicationLauncherDestroyed.Add (AppLauncherDestroyed);
 			GameEvents.onLevelWasLoadedGUIReady.Add (AppLauncherDestroyed);
+			Log ("Awake", "QStockToolbar");
 		}
 			
 		private void AppLauncherReady() {
@@ -93,10 +95,11 @@ namespace QuickIVA {
 			Destroy ();
 		}
 
-		private void OnDestroy() {
+		protected override void OnDestroy() {
 			GameEvents.onGUIApplicationLauncherReady.Remove (AppLauncherReady);
 			GameEvents.onGUIApplicationLauncherDestroyed.Remove (AppLauncherDestroyed);
 			GameEvents.onLevelWasLoadedGUIReady.Remove (AppLauncherDestroyed);
+			Log ("OnDestroy", "QStockToolbar");
 		}
 
 		private void Init() {
@@ -106,6 +109,7 @@ namespace QuickIVA {
 			if (appLauncherButton == null) {
 				appLauncherButton = ApplicationLauncher.Instance.AddModApplication (OnClick, OnClick, null, null, null, null, AppScenes, GetTexture);
 			}
+			Log ("Init", "QStockToolbar");
 		}
 
 		private void Destroy() {
@@ -113,6 +117,7 @@ namespace QuickIVA {
 				ApplicationLauncher.Instance.RemoveModApplication (appLauncherButton);
 				appLauncherButton = null;
 			}
+			Log ("Destroy", "QStockToolbar");
 		}
 
 		internal void Set(bool SetTrue, bool force = false) {
@@ -121,15 +126,16 @@ namespace QuickIVA {
 			}
 			if (appLauncherButton != null) {
 				if (SetTrue) {
-					if (appLauncherButton.State == RUIToggleButton.ButtonState.FALSE) {
+					if (appLauncherButton.toggleButton.CurrentState == KSP.UI.UIRadioButton.State.False) {
 						appLauncherButton.SetTrue (force);
 					}
 				} else {
-					if (appLauncherButton.State == RUIToggleButton.ButtonState.TRUE) {
+					if (appLauncherButton.toggleButton.CurrentState == KSP.UI.UIRadioButton.State.True) {
 						appLauncherButton.SetFalse (force);
 					}
 				}
 			}
+			Log ("Set", "QStockToolbar");
 		}
 
 		internal void Reset() {
@@ -142,6 +148,7 @@ namespace QuickIVA {
 			if (Enabled) {
 				Init ();
 			}
+			Log ("Reset", "QStockToolbar");
 		}
 	}
 }

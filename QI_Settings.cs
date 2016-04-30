@@ -1,6 +1,6 @@
 ﻿/* 
 QuickIVA
-Copyright 2015 Malah
+Copyright 2016 Malah
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,12 +22,18 @@ using UnityEngine;
 
 namespace QuickIVA {
 
-	public class QSettings : MonoBehaviour {
+	public class QSettings : QuickIVA {
 
 		public readonly static QSettings Instance = new QSettings();
 
-		internal string FileConfig = KSPUtil.ApplicationRootPath + "GameData/" + Quick.MOD + "/Config.txt";
+		internal string FileConfig = KSPUtil.ApplicationRootPath + "GameData/" + MOD + "/Config.txt";
 
+		public readonly static ulong idMAP = 1584652;
+		public readonly static ulong idThirdPerson = 1584653;
+		public readonly static ulong idTOGGLEUI = 1584655;
+
+		[Persistent]
+		public bool Debug = false;
 		[Persistent]
 		public bool Enabled = true;
 		[Persistent]
@@ -54,7 +60,7 @@ namespace QuickIVA {
 		public void Save() {
 			ConfigNode _temp = ConfigNode.CreateConfigFromObject(this, new ConfigNode());
 			_temp.Save(FileConfig);
-			Quick.Log ("Settings Saved");
+			Log ("Settings Saved", "QSettings");
 		}
 		public void Load() {
 			if (File.Exists (FileConfig)) {
@@ -64,7 +70,7 @@ namespace QuickIVA {
 				} catch {
 					Save ();
 				}
-				Quick.Log ("Settings Loaded");
+				Log ("Settings Loaded", "QSettings");
 			} else {
 				Save ();
 			}

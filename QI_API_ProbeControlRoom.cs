@@ -1,6 +1,6 @@
 ﻿/* 
 QuickIVA
-Copyright 2015 Malah
+Copyright 2016 Malah
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@ using UnityEngine;
 
 namespace QuickIVA {
 
-	public class QProbeControlRoom {
+	public class QProbeControlRoom : QuickIVA {
 		internal static bool isLoaded = false;
 		internal static bool WasActive = false;
 		private static object Instance;
@@ -31,7 +31,7 @@ namespace QuickIVA {
 		private static PropertyInfo Property_vesselCanStockIVA;
 		private static FieldInfo Field_isActive;
 
-		internal static void Awake() {
+		internal static void Init() {
 			AssemblyLoader.LoadedAssembyList _assemblies = AssemblyLoader.loadedAssemblies;
 			Type _type = null;
 			foreach (var _assembly in _assemblies) {
@@ -52,23 +52,23 @@ namespace QuickIVA {
 					Field_isActive = _type.GetField ("isActive", BindingFlags.Static | BindingFlags.Public);
 					Property_vesselCanStockIVA = _type.GetProperty ("vesselCanStockIVA");
 					if (Method_startIVA == null) {
-						Quick.Warning ("No ProbeControlRoom.startIVA()");
+						Warning ("No ProbeControlRoom.startIVA()", "QProbeControlRoom");
 						return;
 					}
 					if (Property_vesselCanStockIVA == null) {
-						Quick.Warning ("No ProbeControlRoom.vesselCanStockIVA");
+						Warning ("No ProbeControlRoom.vesselCanStockIVA", "QProbeControlRoom");
 						return;
 					}
 					if (Field_isActive == null) {
-						Quick.Warning ("No ProbeControlRoom.isActive");
+						Warning ("No ProbeControlRoom.isActive", "QProbeControlRoom");
 						return;
 					}
 					isLoaded = true;
 				} else {
-					Quick.Warning ("No ProbeControlRoom.Instance");
+					Warning ("No ProbeControlRoom.Instance", "QProbeControlRoom");
 				}
 			} else {
-				Quick.Warning ("No ProbeControlRoom.Assembly");
+				Warning ("No ProbeControlRoom.Assembly", "QProbeControlRoom");
 			}
 		}
 

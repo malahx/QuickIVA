@@ -1,6 +1,6 @@
 ﻿#### QuickIVA
-#### A plugin for Kerbal Space Program 1.0.X
-#### Copyright 2015 Malah
+#### A plugin for Kerbal Space Program
+#### Copyright 2016 Malah
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -50,6 +50,10 @@ Delete the QuickIVA folder in your KSP/GameData folder.
 
 #### Changelog
 
+v1.12 - 2016.04.30
+* Fix: Corrected many functions for KSP 1.1,
+* Compiled against KSP 1.1.2.1260
+
 v1.11 - 2015.06.25
 * Updated to KSP 1.0.X
 
@@ -89,7 +93,7 @@ v1.00 - 2015.02.07
 #### Links
 
 * http://forum.kerbalspaceprogram.com/threads/95168#QuickIVA
-* https://kerbalstuff.com/mod/568/QuickIVA
+* http://spacedock.info/mod/107/QuickIVA
 * http://kerbal.curseforge.com/ksp-mods/227809-quickiva
 * https://github.com/malahx/QuickIVA
 * RasterPropMonitor: http://forum.kerbalspaceprogram.com/threads/117471

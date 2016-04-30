@@ -1,6 +1,6 @@
 ﻿/* 
 QuickIVA
-Copyright 2015 Malah
+Copyright 2016 Malah
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,14 +20,14 @@ using System;
 using UnityEngine;
 
 namespace QuickIVA {
-	public class QBlizzyToolbar {
+	public class QBlizzyToolbar : QuickIVA {
 	
 		internal bool Enabled {
 			get {
 				return QSettings.Instance.BlizzyToolBar;
 			}
 		}
-		private string TexturePath = Quick.MOD + "/Textures/BlizzyToolBar";
+		private string TexturePath = MOD + "/Textures/BlizzyToolBar";
 		public static GameScenes[] AppScenes = {
 			GameScenes.SPACECENTER
 		};
@@ -43,18 +43,18 @@ namespace QuickIVA {
 			}
 		}
 
-		internal void Start() {
+		internal void Init() {
 			if (!HighLogic.LoadedSceneIsGame || !isAvailable || !Enabled || Button != null) {
 				return;
 			}
-			Button = ToolbarManager.Instance.add (Quick.MOD, Quick.MOD);
+			Button = ToolbarManager.Instance.add (MOD, MOD);
 			Button.TexturePath = TexturePath;
-			Button.ToolTip = Quick.MOD + ": Settings";
+			Button.ToolTip = MOD + ": Settings";
 			Button.OnClick += (e) => OnClick ();
 		 	Button.Visibility = new GameScenesVisibility(AppScenes);
 		}
 
-		internal void OnDestroy() {
+		internal void Destroy() {
 			if (!isAvailable || Button == null) {
 				return;
 			}

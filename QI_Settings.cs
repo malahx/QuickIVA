@@ -16,46 +16,38 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>. 
 */
 
-using System;
 using System.IO;
-using UnityEngine;
 
 namespace QuickIVA {
 
 	public class QSettings : QuickIVA {
 
-		public readonly static QSettings Instance = new QSettings();
+		[KSPField (isPersistant = true)] private static readonly QSettings instance = new QSettings ();
+		public static QSettings Instance {
+			get {
+				if (!instance.isLoaded) {
+					instance.Load ();
+				}
+				return instance;
+			}
+		}
 
-		internal string FileConfig = KSPUtil.ApplicationRootPath + "GameData/" + MOD + "/Config.txt";
+		internal static readonly string FileConfig = KSPUtil.ApplicationRootPath + "GameData/" + MOD + "/Config.txt";
 
-		public readonly static ulong idMAP = 1584652;
-		public readonly static ulong idThirdPerson = 1584653;
-		public readonly static ulong idTOGGLEUI = 1584655;
+		[KSPField (isPersistant = true)] private bool isLoaded = false;
 
-		[Persistent]
-		public bool Debug = false;
-		[Persistent]
-		public bool Enabled = true;
-		[Persistent]
-		public bool IVAatLaunch = false;
-		[Persistent]
-		public bool AutoHideUI = true;
-		[Persistent]
-		public bool DisableThirdPersonVessel = true;
-		[Persistent]
-		public bool DisableMapView = false;
-		[Persistent]
-		public bool DisableShowUIonIVA = true;
-		[Persistent]
-		public bool StockToolBar = true;
-		[Persistent]
-		public bool BlizzyToolBar = true;
-		[Persistent]
-		public bool KeyEnabled = true;
-		[Persistent]
-		public string KeyRecovery = "end";
-		[Persistent]
-		public string KeyEVA = "home";
+		[Persistent] public bool Debug = true;
+		[Persistent] public bool Enabled = true;
+		[Persistent] public bool IVAatLaunch = false;
+		[Persistent] public bool AutoHideUI = true;
+		[Persistent] public bool DisableThirdPersonVessel = true;
+		[Persistent] public bool DisableMapView = false;
+		[Persistent] public bool DisableShowUIonIVA = true;
+		[Persistent] public bool StockToolBar = true;
+		[Persistent] public bool BlizzyToolBar = true;
+		[Persistent] public bool KeyEnabled = true;
+		[Persistent] public string KeyRecovery = "end";
+		[Persistent] public string KeyEVA = "home";
 
 		public void Save() {
 			ConfigNode _temp = ConfigNode.CreateConfigFromObject(this, new ConfigNode());
@@ -70,10 +62,11 @@ namespace QuickIVA {
 				} catch {
 					Save ();
 				}
-				Log ("Settings Loaded", "QSettings");
+				Log ("Settings Loaded", "QSettings", true);
 			} else {
 				Save ();
 			}
+			isLoaded = true;
 		}
 	}
 }

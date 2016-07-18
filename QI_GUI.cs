@@ -16,7 +16,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>. 
 */
 
-using System;
 using UnityEngine;
 
 namespace QuickIVA {
@@ -27,7 +26,7 @@ namespace QuickIVA {
 		internal static QBlizzyToolbar BlizzyToolbar;
 
 		protected override void Awake() {
-			RectSettings = new Rect ((Screen.width - 515)/2, (Screen.height - 400)/2, 515, 400);
+			RectSettings = new Rect ((Screen.width - 515)/2, (Screen.height - 450)/2, 515, 450);
 			if (BlizzyToolbar == null) BlizzyToolbar = new QBlizzyToolbar ();
 			Log ("Awake", "QGUI");
 		}
@@ -163,6 +162,7 @@ namespace QuickIVA {
 				GUILayout.EndHorizontal();
 				GUILayout.Space(5);
 			}
+			GUILayout.FlexibleSpace ();
 			GUILayout.BeginHorizontal();
 			if (GUILayout.Button ("Close",GUILayout.Height(30))) {
 				try {

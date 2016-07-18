@@ -61,7 +61,7 @@ namespace QuickIVA {
 		}
 
 		private bool isIVA(CameraManager.CameraMode cameraMode) {
-			return cameraMode == CameraManager.CameraMode.IVA || (cameraMode == CameraManager.CameraMode.Internal && QProbeControlRoom.isActive);
+			return cameraMode == CameraManager.CameraMode.IVA;
 		}
 
 		private bool isMAP {
@@ -75,8 +75,8 @@ namespace QuickIVA {
 
 		private Kerbal CheckIVAKerbal(Vessel vessel) {
 			List<InternalSeat> _seats = VesselSeats (vessel);
-			foreach (InternalSeat _seat in _seats) {
-				Kerbal _kerbal = _seat.kerbalRef;
+			for (int _i = _seats.Count - 1; _i >= 0; --_i) {
+				Kerbal _kerbal = _seats[_i].kerbalRef;
 				if (_kerbal.eyeTransform == InternalCamera.Instance.transform.parent) {
 					return _kerbal;
 				}
@@ -109,22 +109,23 @@ namespace QuickIVA {
 			hasOnlyPlaceholder = true;
 			List<Part> _parts = vessel.parts;
 			List<InternalSeat> _result = new List<InternalSeat> ();
-			foreach (Part _part in _parts) {
+			for (int _i = _parts.Count - 1; _i >= 0; --_i) {
+				Part _part = _parts[_i];
 				if (_part.internalModel != null) {
 					if (_part.internalModel.internalName != "Placeholder" || withPlaceholder) {
 						hasOnlyPlaceholder = false;
 						List<InternalSeat> _seats = _part.internalModel.seats;
-						if (_seats.Count > 0) {
-							foreach (InternalSeat _seat in _seats) {
+							for (int _j = _seats.Count - 1; _j >= 0; --_j) {
+								InternalSeat _seat = _seats[_j];
 								if (_seat.taken && _seat.kerbalRef != null) {
 									Kerbal _kerbal = _seat.kerbalRef;
 									if (_kerbal.state == Kerbal.States.ALIVE || _kerbal.state == Kerbal.States.NO_SIGNAL) {
-										if (_part.partInfo.category == PartCategories.Pods) {
-											_result.Insert (_index, _seat);
-											_index++;
-										} else {
-											_result.Add (_seat);
-										}
+									if (_part.partInfo.category == PartCategories.Pods) {
+										_result.Insert (_index, _seat);
+										_index++;
+									}
+									else {
+										_result.Add (_seat);
 									}
 								}
 							}
@@ -147,8 +148,8 @@ namespace QuickIVA {
 			Kerbal _first = null;
 			Kerbal _firstPilot = null;
 			List<InternalSeat> _seats = VesselSeats (vessel);
-			foreach (InternalSeat _seat in _seats) {
-				Kerbal _kerbal = _seat.kerbalRef;
+			for (int _i = _seats.Count - 1; _i >= 0; --_i) {
+				Kerbal _kerbal = _seats[_i].kerbalRef;
 				if (_first == null) {
 					_first = _kerbal;
 				}
@@ -175,8 +176,8 @@ namespace QuickIVA {
 			crewAreLoaded = true;
 			first = null;
 			List<ProtoCrewMember> _crews = vessel.GetVesselCrew ();
-			foreach (ProtoCrewMember protoCrewMember in _crews) {
-				Kerbal _kerbal = protoCrewMember.KerbalRef;
+			for (int _i = _crews.Count - 1; _i >= 0; --_i) {
+				Kerbal _kerbal = _crews[_i].KerbalRef;
 				if (_kerbal.state == Kerbal.States.ALIVE || _kerbal.state == Kerbal.States.NO_SIGNAL) {
 					first = _kerbal;
 					crewAreLoaded = true;
@@ -191,7 +192,8 @@ namespace QuickIVA {
 
 		private bool VesselIsAlone (Vessel vessel) {
 			List<Vessel> _vessels = FlightGlobals.Vessels;
-			foreach (Vessel _vessel in _vessels) {
+			for (int _i = _vessels.Count - 1; _i >= 0; --_i) {
+				Vessel _vessel = _vessels[_i];
 				if (_vessel != vessel && _vessel.loaded) {
 					return false;
 				}
@@ -224,48 +226,52 @@ namespace QuickIVA {
 
 		private void DisableToggleUI(bool enable = true) {
 			if (enable && QSettings.Instance.DisableShowUIonIVA) {
-				GameSettings.TOGGLE_UI.inputLockMask = QSettings.idTOGGLEUI;
-				InputLockManager.SetControlLock ((ControlTypes)QSettings.idTOGGLEUI, MOD + "TOGGLE_UI_INPUT");
+				GameSettings.TOGGLE_UI.switchState = InputBindingModes.None;
+				GameSettings.TOGGLE_UI.switchStateSecondary = InputBindingModes.None;
 				StartCoroutine(WaitToHideUI ());
 				Log ("Disable Toggle UI shortcut", "QIVA");
 			} else {
-				InputLockManager.RemoveControlLock (MOD + "TOGGLE_UI_INPUT");
-				GameSettings.TOGGLE_UI.inputLockMask = new ulong ();
+				GameSettings.TOGGLE_UI.switchState = InputBindingModes.Any;
+				GameSettings.TOGGLE_UI.switchStateSecondary = InputBindingModes.Any;
 				Log ("Enable Toggle UI shortcut", "QIVA");
 			}
 		}
 
 		private void DisableMapView(bool enable = true) {
 			if (enable && QSettings.Instance.DisableMapView) {
-				InputLockManager.SetControlLock (ControlTypes.MAP | ControlTypes.MAPVIEW | ControlTypes.MAP_TOGGLE | ControlTypes.MAP_UI, MOD + "MAP_CONTROL");
-				GameSettings.MAP_VIEW_TOGGLE.inputLockMask = QSettings.idMAP;
-				InputLockManager.SetControlLock ((ControlTypes)QSettings.idMAP, MOD + "MAP_INPUT");
+				GameSettings.MAP_VIEW_TOGGLE.switchState = InputBindingModes.None;
+				GameSettings.MAP_VIEW_TOGGLE.switchStateSecondary = InputBindingModes.None;
 				Log ("Disable MapView shortcut", "QIVA");
 			} else {
-				InputLockManager.RemoveControlLock (MOD + "MAP_CONTROL");
-				InputLockManager.RemoveControlLock (MOD + "MAP_INPUT");
-				GameSettings.MAP_VIEW_TOGGLE.inputLockMask = new ulong ();
+				GameSettings.MAP_VIEW_TOGGLE.switchState = InputBindingModes.Any;
+				GameSettings.MAP_VIEW_TOGGLE.switchStateSecondary = InputBindingModes.Any;
 				Log ("Enable MapView shortcut", "QIVA");
 			}
 		}
 			
 		private void DisableThirdPersonVessel(bool enable = true) {
 			if (enable && QSettings.Instance.DisableThirdPersonVessel) {
-				GameSettings.CAMERA_MODE.inputLockMask = QSettings.idThirdPerson;
-				GameSettings.FOCUS_NEXT_VESSEL.inputLockMask = QSettings.idThirdPerson;
-				GameSettings.FOCUS_PREV_VESSEL.inputLockMask = QSettings.idThirdPerson;
-				InputLockManager.SetControlLock ((ControlTypes)QSettings.idThirdPerson, MOD + "CAMERAMODE_INPUT");
+				GameSettings.CAMERA_MODE.switchState = InputBindingModes.None;
+				GameSettings.CAMERA_MODE.switchStateSecondary = InputBindingModes.None;
+				GameSettings.FOCUS_NEXT_VESSEL.switchState = InputBindingModes.None;
+				GameSettings.FOCUS_NEXT_VESSEL.switchStateSecondary = InputBindingModes.None;
+				GameSettings.FOCUS_PREV_VESSEL.switchState = InputBindingModes.None;
+				GameSettings.FOCUS_PREV_VESSEL.switchStateSecondary = InputBindingModes.None;
 				if (FlightGlobals.ActiveVessel.GetCrewCount () == 1) {
-					GameSettings.CAMERA_NEXT.inputLockMask = QSettings.idThirdPerson;
+					GameSettings.CAMERA_NEXT.switchState = InputBindingModes.None;
+					GameSettings.CAMERA_NEXT.switchStateSecondary = InputBindingModes.None;
 					Log ("Disable Camera Next (only one seat taken)", "QIVA");
 				}
 				Log ("Disable Third Person Vessel View", "QIVA");
 			} else {
-				InputLockManager.RemoveControlLock (MOD + "CAMERAMODE_INPUT");
-				GameSettings.CAMERA_MODE.inputLockMask = new ulong ();
-				GameSettings.FOCUS_NEXT_VESSEL.inputLockMask = new ulong ();
-				GameSettings.FOCUS_PREV_VESSEL.inputLockMask = new ulong ();
-				GameSettings.CAMERA_NEXT.inputLockMask = new ulong ();
+				GameSettings.CAMERA_MODE.switchState = InputBindingModes.Any;
+				GameSettings.CAMERA_MODE.switchStateSecondary = InputBindingModes.Any;
+				GameSettings.FOCUS_NEXT_VESSEL.switchState = InputBindingModes.Any;
+				GameSettings.FOCUS_NEXT_VESSEL.switchStateSecondary = InputBindingModes.Any;
+				GameSettings.FOCUS_PREV_VESSEL.switchState = InputBindingModes.Any;
+				GameSettings.FOCUS_PREV_VESSEL.switchStateSecondary = InputBindingModes.Any;
+				GameSettings.CAMERA_NEXT.switchState = InputBindingModes.Any;
+				GameSettings.CAMERA_NEXT.switchStateSecondary = InputBindingModes.Any;
 				Log ("Enable Third Person Vessel View", "QIVA");
 			}
 		}
@@ -321,9 +327,7 @@ namespace QuickIVA {
 				Log ("We are in IVA!", "QIVA");
 				return;
 			}
-			if (!QProbeControlRoom.vesselCanStockIVA) {
-				isGoneIVA = QProbeControlRoom.startIVA ();
-			} else if (vessel.GetCrewCount () > 0) {
+			if (vessel.GetCrewCount () > 0) {
 				if (VesselHasCrewAlive (vessel)) {
 					bool _VesselhasOnlyPlaceholder;
 					Kerbal _IVAKerbal;
@@ -380,14 +384,12 @@ namespace QuickIVA {
 				Destroy (this);
 				return;
 			}
-			QSettings.Instance.Load ();
 			if (!QSettings.Instance.Enabled || Instance != null) {
 				Warning ("Disabled or an instance already exists, destroy !", "QIVA");
 				Destroy (this);
 				return;
 			}
 			Instance = this;
-			QProbeControlRoom.Init ();
 			GameEvents.onLaunch.Add (OnLaunch);
 			GameEvents.onCrewBoardVessel.Add (OnCrewBoardVessel);
 			GameEvents.onCrewOnEva.Add (OnCrewOnEva);
@@ -469,7 +471,7 @@ namespace QuickIVA {
 		}
 
 		// Go IVA at Launch
-		private void OnLaunch(EventReport EventReport) {
+		private void OnLaunch(EventReport eventReport) {
 			if (QSettings.Instance.IVAatLaunch) {
 				GoIVA (FlightGlobals.ActiveVessel);
 			}

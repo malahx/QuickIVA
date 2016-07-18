@@ -17,8 +17,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 using KSP.UI.Screens;
-using System;
-using System.Collections;
 using UnityEngine;
 
 namespace QuickIVA {
@@ -77,7 +75,6 @@ namespace QuickIVA {
 		}
 			
 		private void AppLauncherReady() {
-			QSettings.Instance.Load ();
 			if (!Enabled) {
 				return;
 			}
@@ -135,7 +132,7 @@ namespace QuickIVA {
 					}
 				}
 			}
-			Log ("Set", "QStockToolbar");
+			Log ("Set " + SetTrue + " force: " + force, "QStockToolbar");
 		}
 
 		internal void Reset() {

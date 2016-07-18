@@ -20,7 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 QuickIVA is a small plugin which adds a switch to the IVA at the loading or the launch of a vessel.
 
 I suggest you to use the awesome mod RasterPropMonitor which makes the IVA usable.
-QuickIVA support the mod Probe Control Room.
 
 #### How does it work ?
 
@@ -49,6 +48,15 @@ Unzip all files. Merge the new QuickIVA folder with the old folder which is in y
 Delete the QuickIVA folder in your KSP/GameData folder.
 
 #### Changelog
+
+v1.13 - 2016.07.18
+* Fix: Rewrite of the key lock to not use inputLockMask (thanks LtMtz),
+* Fix: Corrected the reset of the Blizzy toolbar button,
+* Fix: Enhanced the settings functions,
+* Fix: Deleted useless libraries,
+* Fix: Deleted foreach functions,
+* Fix: Deleted support of Probe Control Room (when it will be updated to KSP 1.1.X, I will readd/rewrite my warpper),
+* Compiled against KSP 1.1.3.1289
 
 v1.12 - 2016.04.30
 * Fix: Corrected many functions for KSP 1.1,
@@ -92,7 +100,7 @@ v1.00 - 2015.02.07
 
 #### Links
 
-* http://forum.kerbalspaceprogram.com/threads/95168#QuickIVA
+* http://forum.kerbalspaceprogram.com/index.php?/topic/85834-1
 * http://spacedock.info/mod/107/QuickIVA
 * http://kerbal.curseforge.com/ksp-mods/227809-quickiva
 * https://github.com/malahx/QuickIVA

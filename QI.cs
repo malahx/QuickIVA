@@ -34,20 +34,25 @@ namespace QuickIVA {
 		protected readonly static string VERSION = Assembly.GetAssembly(typeof(QuickIVA)).GetName().Version.Major + "." + Assembly.GetAssembly(typeof(QuickIVA)).GetName().Version.Minor + Assembly.GetAssembly(typeof(QuickIVA)).GetName().Version.Build;
 		protected readonly static string MOD = Assembly.GetAssembly(typeof(QuickIVA)).GetName().Name;
 
-		protected static void Log(string String, string Title = null) {
+		internal static void Log(string String, string Title = null, bool force = false) {
+			if (!force) {
+				if (!QSettings.Instance.Debug) {
+					return;
+				}
+			}
 			if (Title == null) {
 				Title = MOD;
-			} else {
+			}
+			else {
 				Title = string.Format ("{0}({1})", MOD, Title);
 			}
-			if (QSettings.Instance.Debug) {
-				Debug.Log (string.Format ("{0}[{1}]: {2}", Title, VERSION, String));
-			}
+			Debug.Log (string.Format ("{0}[{1}]: {2}", Title, VERSION, String));
 		}
-		protected static void Warning(string String, string Title = null) {
+		internal static void Warning(string String, string Title = null) {
 			if (Title == null) {
 				Title = MOD;
-			} else {
+			}
+			else {
 				Title = string.Format ("{0}({1})", MOD, Title);
 			}
 			Debug.LogWarning (string.Format ("{0}[{1}]: {2}", Title, VERSION, String));

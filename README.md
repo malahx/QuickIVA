@@ -49,7 +49,7 @@ Delete the QuickIVA folder in your KSP/GameData folder.
 
 #### Changelog
 
-v1.13 - 2016.09.14
+v1.14 - 2016.09.14
 * Compiled against KSP 1.2.0.1473
 
 v1.13 - 2016.07.18

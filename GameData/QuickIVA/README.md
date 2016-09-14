@@ -49,6 +49,9 @@ Delete the QuickIVA folder in your KSP/GameData folder.
 
 #### Changelog
 
+v1.13 - 2016.09.14
+* Compiled against KSP 1.2.0.1473
+
 v1.13 - 2016.07.18
 * Fix: Rewrite of the key lock to not use inputLockMask (thanks LtMtz),
 * Fix: Corrected the reset of the Blizzy toolbar button,
